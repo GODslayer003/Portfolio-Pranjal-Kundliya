@@ -10,8 +10,16 @@ export default function Celestials() {
     useFrame(() => {
         const th = world.t * Math.PI * 2;
         const x = Math.sin(th) * 16, y = Math.cos(th) * 12;
-        sun.current.position.set(x, y, -20);
-        moon.current.position.set(-x, -y, -20);
+
+        // Gentle floating so they aren't static when locked
+        const ft = world.floatTime;
+        const sx = Math.sin(ft * 0.4) * 0.5;
+        const sy = Math.sin(ft * 0.5 + 1.2) * 0.4;
+        const mx = Math.sin(ft * 0.35 + 2.7) * 0.5;
+        const my = Math.sin(ft * 0.45 + 0.8) * 0.4;
+
+        sun.current.position.set(x + sx, y + sy, -20);
+        moon.current.position.set(-x + mx, -y + my, -20);
         sunLight.current.position.copy(sun.current.position);
         moonLight.current.position.copy(moon.current.position);
 

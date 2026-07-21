@@ -1,14 +1,27 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { world, CYCLE } from "./world";
+import { world, DAY_T } from "./world";
 import { samplePalette } from "../utils/palette";
 import { smoothstep } from "../utils/color";
 
-// The heartbeat of the site: advances the eternal day/night loop,
-// drives the Three.js atmosphere AND the DOM theme via CSS variables.
+const LERP_SPEED = 2.5;
+
 export default function WorldClock() {
     const scene = useThree((s) => s.scene);
     useFrame((_, delta) => {
-        world.t = (world.t + Math.min(delta, 0.05) / CYCLE) % 1;
+        world.floatTime += delta;
+
+        // Lerp toward target on manual toggle, otherwise stay put
+        if (world.lerping && world.targetT !== null) {
+            const diff = world.targetT - world.t;
+            const step = diff * Math.min(1, delta * LERP_SPEED);
+            world.t += step;
+            if (Math.abs(diff) < 0.0005) {
+                world.t = world.targetT;
+                world.targetT = null;
+                world.lerping = false;
+            }
+        }
+
         world.night = Math.max(0, smoothstep(0.40, 0.52, world.t) - smoothstep(0.88, 1.0, world.t));
 
         const p = samplePalette(world.t);

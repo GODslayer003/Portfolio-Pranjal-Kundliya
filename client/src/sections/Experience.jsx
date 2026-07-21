@@ -13,10 +13,18 @@ export default function ExperienceSection() {
             });
             const metric = card.querySelector(".xp-metric");
             const target = metric.dataset.value;
-            gsap.from(metric, {
-                textContent: 0, duration: 1.6, ease: "power2.out", snap: { textContent: 1 },
+            const targetNumber = parseInt(target.match(/\d+/)[0]) || 0;
+            const suffix = target.replace(/\d+/, "");
+            const counterObj = { val: 0 };
+            
+            gsap.to(counterObj, {
+                val: targetNumber,
+                duration: 1.6,
+                ease: "power2.out",
                 scrollTrigger: { trigger: card, start: "top 75%" },
-                onUpdate() { metric.textContent = Math.round(this.targets()[0].textContent) + target.replace(/\d+/, ""); },
+                onUpdate: () => {
+                    metric.textContent = Math.round(counterObj.val) + suffix;
+                }
             });
         });
     }, { scope });
@@ -44,10 +52,19 @@ export default function ExperienceSection() {
                         style={{ borderRadius: "1.75rem", padding: "2rem 2.5rem" }}
                     >
                         {/* Header row */}
-                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: "0.5rem" }}>
-                            <h3 className="h-display" style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "var(--ink)" }}>
-                                {xp.company}
-                            </h3>
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                                {xp.logo && (
+                                    <img 
+                                        src={xp.logo} 
+                                        alt={`${xp.company} logo`} 
+                                        style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} 
+                                    />
+                                )}
+                                <h3 className="h-display" style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+                                    {xp.company}
+                                </h3>
+                            </div>
                             <span style={{ fontSize: "0.8rem", color: "var(--muted)" }}>{xp.period}</span>
                         </div>
 

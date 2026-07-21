@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
 
 const links = ["about", "skills", "experience", "projects", "contact"];
 
@@ -45,6 +46,8 @@ export default function Navbar() {
                         </NavLink>
                     ))}
                 </div>
+
+                <ThemeToggle />
 
                 {/* Hamburger button — visible only on mobile */}
                 <button
